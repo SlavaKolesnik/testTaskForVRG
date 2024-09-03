@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
-    android:background="#FBC3C3"
-    android:backgroundTint="#F29B9B"
     app:cardCornerRadius="8dp">
 
     <LinearLayout
@@ -14,29 +12,43 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/author"
+            android:textStyle="bold" />
+
+        <TextView
             android:id="@+id/author"
             android:layout_width="106dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:text="TextView" />
+            android:text="TextView"
+            android:textSize="16sp" />
 
         <ImageView
-            android:id="@+id/imView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/thumbnail"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_margin="5dp"
             app:srcCompat="@drawable/ic_launcher_foreground" />
 
         <TextView
             android:id="@+id/time"
-            android:layout_width="match_parent"
+            android:layout_width="114dp"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:layout_margin="5dp"
+            android:text="TextView"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/comments"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="5dp"
+            android:text="TextView"
+            android:textSize="16sp" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

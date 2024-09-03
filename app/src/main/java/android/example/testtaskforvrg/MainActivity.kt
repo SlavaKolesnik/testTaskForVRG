@@ -1,5 +1,6 @@
 package android.example.testtaskforvrg
 
+import android.content.res.Configuration
 import android.example.testtaskforvrg.adapter.EntryAdapter
 import android.example.testtaskforvrg.databinding.ActivityMainBinding
 import android.example.testtaskforvrg.retrofit.Entry
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,8 +39,14 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        val orientation = resources.configuration.orientation
+        val numberOfColumns = if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            4 } else { 2
+        }
+
+
         adapter = EntryAdapter()
-        binding.rcView.layoutManager = LinearLayoutManager(this)
+        binding.rcView.layoutManager = GridLayoutManager(this@MainActivity, numberOfColumns)
         binding.rcView.adapter = adapter
 
         val inspector = HttpLoggingInterceptor().apply {
