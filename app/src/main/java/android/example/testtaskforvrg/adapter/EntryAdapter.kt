@@ -16,9 +16,11 @@ import com.squareup.picasso.Picasso
 import java.time.Instant
 import java.time.Duration
 
-class EntryAdapter : ListAdapter<Entry, EntryAdapter.Holder>(Comparator()) {
+class EntryAdapter(
+    private val onItemClick: (Entry) -> Unit
+) : ListAdapter<Entry, EntryAdapter.Holder>(Comparator()) {
 
-    class Holder(view: View) : RecyclerView.ViewHolder(view) {
+    class Holder(view: View, private val onItemClick: (Entry) -> Unit) : RecyclerView.ViewHolder(view) {
         private val binding = ListItemBinding.bind(view)
 
         @RequiresApi(Build.VERSION_CODES.O)
@@ -38,6 +40,10 @@ class EntryAdapter : ListAdapter<Entry, EntryAdapter.Holder>(Comparator()) {
                 .placeholder(R.drawable.placeholder_image)
                 .error(R.drawable.error_image)
                 .into(thumbnail)
+
+            itemView.setOnClickListener {
+                onItemClick(entry)
+            }
         }
     }
 
@@ -53,8 +59,9 @@ class EntryAdapter : ListAdapter<Entry, EntryAdapter.Holder>(Comparator()) {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
-        return Holder(view)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent,
+            false)
+        return Holder(view, onItemClick)
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
