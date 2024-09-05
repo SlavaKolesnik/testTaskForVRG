@@ -9,11 +9,14 @@ import android.example.testtaskforvrg.retrofit.Entry
 import android.example.testtaskforvrg.retrofit.MainApi
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,13 +36,32 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         Log.d("Lifecycle", "onCreate called")
         enableEdgeToEdge()
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        fun replaceFragment(fragment: Fragment) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentHistory, fragment)
+                .commit()
+        }
+
+        binding.bNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.db -> {
+                    replaceFragment(HistoryFragment())
+                    binding.rcView.visibility = View.GONE
+                    binding.fragmentHistory.visibility = View.VISIBLE
+                    true
+                }
+                R.id.reddit -> {
+
+                    binding.rcView.visibility = View.VISIBLE
+                    binding.fragmentHistory.visibility = View.GONE
+                    true
+                }
+                else -> false
+            }
         }
 
         val orientation = resources.configuration.orientation
@@ -51,7 +73,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, ItemActivity::class.java)
             intent.putExtra(Constance.KEY_1, entry.thumbnail)
             startActivity(intent)
-            Toast.makeText(this, "Author: ${entry.subreddit}", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this, "Author: ${entry.subreddit}", Toast.LENGTH_SHORT).show()
         }
         binding.rcView.layoutManager = GridLayoutManager(this@MainActivity, numberOfColumns)
         binding.rcView.adapter = adapter

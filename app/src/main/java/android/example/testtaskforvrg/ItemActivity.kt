@@ -10,9 +10,13 @@ import android.os.Environment
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -23,7 +27,9 @@ class ItemActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityItemBinding.inflate(layoutInflater)
         enableEdgeToEdge()
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         setContentView(binding.root)
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -58,6 +64,17 @@ class ItemActivity : AppCompatActivity() {
                             Toast.makeText(this@ItemActivity, Constance.LOADING, Toast.LENGTH_LONG).show()
                         }
                     })
+            }
+
+            like.setOnClickListener {
+                val db = MainDB.getDb(this@ItemActivity)
+                val item = Item(null, info ?: "") // Зберігаємо URL, що передано в інтенції
+                lifecycleScope.launch(Dispatchers.IO) {
+                    db.getDao().insertItem(item)
+                    runOnUiThread {
+                        Toast.makeText(this@ItemActivity, "Image URL saved to database", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
 
             cancel.setOnClickListener {
